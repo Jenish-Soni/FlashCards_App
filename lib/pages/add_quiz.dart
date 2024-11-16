@@ -19,13 +19,13 @@ class _AddQuizState extends State<AddQuiz> {
       String question = questionController.text;
       String answer = answerController.text;
 
-      // Insert the new quiz question into the database
+      
       await DatabaseHelper.instance.insert({
         'question': question,
         'answer': answer,
       });
 
-      // Go back to the previous screen after submitting the form
+      
       Navigator.pop(context);
     }
   }

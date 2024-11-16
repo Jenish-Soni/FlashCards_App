@@ -26,14 +26,14 @@ class Flashcard extends StatelessWidget {
       onTap: onTap,
       child: Stack(
         children: [
-          // Front of the card (question)
+          
           _buildCardSide(
             key: const ValueKey('front'),
             content: question,
             isFront: true,
             isVisible: !isAnswerVisible,
           ),
-          // Back of the card (answer)
+          
           _buildCardSide(
             key: const ValueKey('back'),
             content: answer,

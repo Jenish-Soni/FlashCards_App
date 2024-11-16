@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/db_helper.dart';
 import '../widget/edit_quiz.dart';
 import '../widget/flashcard.dart';
-import 'add_quiz.dart'; // Import the edit quiz screen
+import 'add_quiz.dart'; 
 
 class FlashcardsList extends StatefulWidget {
   const FlashcardsList({super.key});
@@ -14,7 +14,7 @@ class FlashcardsList extends StatefulWidget {
 
 class _FlashcardsListState extends State<FlashcardsList> {
   late Future<List<Map<String, dynamic>>> _quizList;
-  Map<int, bool> _isAnswerVisible = {}; // Track visibility state of each answer
+  Map<int, bool> _isAnswerVisible = {}; 
 
   @override
   void initState() {
@@ -22,14 +22,14 @@ class _FlashcardsListState extends State<FlashcardsList> {
     _loadQuizData();
   }
 
-  // Load quiz data from the database
+  
   _loadQuizData() {
     setState(() {
       _quizList = DatabaseHelper.instance.queryAllRows();
     });
   }
 
-  // Toggle the visibility of the answer for a specific quiz question
+  
   void _toggleAnswerVisibility(int quizId) {
     setState(() {
       bool currentVisibility = _isAnswerVisible[quizId] ?? false;
@@ -37,10 +37,10 @@ class _FlashcardsListState extends State<FlashcardsList> {
     });
   }
 
-  // Delete quiz item from the database
+  
   void _deleteQuiz(int quizId) async {
     await DatabaseHelper.instance.delete(quizId);
-    _loadQuizData(); // Reload the quiz list after deletion
+    _loadQuizData(); 
   }
 
   @override
@@ -58,7 +58,7 @@ class _FlashcardsListState extends State<FlashcardsList> {
           IconButton(
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => const AddQuiz())).then((_) {
-                _loadQuizData(); // Reload data after adding a new quiz question
+                _loadQuizData(); 
               });
             },
             icon: const Icon(Icons.add),
@@ -92,10 +92,10 @@ class _FlashcardsListState extends State<FlashcardsList> {
                     answer: quiz['answer'],
                     isAnswerVisible: isAnswerVisible,
                     onTap: () {
-                      _toggleAnswerVisibility(quizId); // Toggle answer visibility on tap
+                      _toggleAnswerVisibility(quizId);
                     },
                     onEdit: () async {
-                      // Navigate to the Edit Quiz screen
+                      
                       var updatedQuiz = await Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -108,13 +108,21 @@ class _FlashcardsListState extends State<FlashcardsList> {
                       );
 
                       if (updatedQuiz != null) {
-                        // Update the quiz in the database after editing
                         await DatabaseHelper.instance.update(updatedQuiz);
-                        _loadQuizData(); // Reload the quiz data
+                        _loadQuizData();
                       }
                     },
                     onDelete: () {
-                      _deleteQuiz(quizId); // Delete quiz item from database
+                      showDialog(context: context, builder: (BuildContext context){
+                        return AlertDialog(
+                          title: Text("Delete Record"),
+                          content: Text("Are you sure you want to delete this record"),
+                          actions: [
+                            TextButton(onPressed: (){Navigator.of(context).pop();}, child: Text("No")),
+                            TextButton(onPressed: (){ _deleteQuiz(quizId);}, child: Text("Yes")),
+                          ],
+                        );
+                      });
                     },
                   ),
                 );
